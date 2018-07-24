@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=yes">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/css/style.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/Adaptation.js"></script>
+    <title>业绩看板</title>
+</head>
+<body class="index">
+<div class="top">
+    <ul class="f-cb" id="nav">
+        <li data-id="1">昨日</li>
+        <li data-id="2">上周</li>
+        <li data-id="3">本周</li>
+        <li data-id="4">上月</li>
+        <li data-id="5" class="active">本月</li>
+        <li data-id="6">年至今</li>
+    </ul>
+</div>
+<div>
+</div>
+<div class="index-content f-cb">
+    <p class="heeed f-cb">
+        <span class="text-left">销售额</span>
+        <span class="text-right">日期范围：20171201至20171229</span>
+    </p>
+
+    <div class="map-y f-cb">
+        <p class="title" id="Sal_amt">9,443,653</p>
+        <div class="map-left">
+            <div id="main"></div>
+            <p>达成率</p>
+        </div>
+        <div class="map-right">
+            <div id="main1"></div>
+            <p>同比增长</p>
+        </div>
+    </div>
+</div>
+<div class="index-content f-cb">
+    <p class="heeed f-cb">
+        <span class="text-left">销售走势和同期对比</span>
+    </p>
+
+    <div class="map-y f-cb" style="padding-top: .3rem">
+        <div id="map"></div>
+    </div>
+</div>
+<div class="index-content f-cb">
+    <p class="heeed f-cb">
+        <span class="text-left">区域销售排行（金额：万）</span>
+    </p>
+
+    <div class="map-y f-cb" style="padding-top: .3rem">
+        <div id="ma" style="width: 100%;"></div>
+    </div>
+</div>
+<div class="footer">
+    <ul class="f-cb">
+        <li>
+            <p class="one" id="org_nm"></p>
+            <p class="two">总店数</p>
+        </li>
+        <li>
+            <p class="one" id="tb_org_nm"></p>
+            <p class="two">同比增长店数</p>
+        </li>
+        <li>
+            <p class="one" id="dc_org_nm"></p>
+            <p class="two">目标达成数</p>
+        </li>
+        <li>
+            <p class="one" id="ly_sal_amt"></p>
+            <p class="two">店均销额</p>
+        </li>
+        <li>
+            <p class="one" id="spid"></p>
+            <p class="two">同比下降店数</p>
+        </li>
+        <li>
+            <p class="one" id="target_amt"></p>
+            <p class="two">目标未达成店数</p>
+        </li>
+    </ul>
+</div>
+<script type="text/javascript" src="js/echarts.mins.js"></script>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/api.js"></script>
+<script type="text/javascript">
+    var params = {
+        "userId":"13812345678",
+        "va_months":5
+    };
+    $.ajax({
+        type: 'POST',
+        url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+        dataType: 'json',
+        data:getRequestParams(params,'demo.yjkb.ds1'),
+        success: function (data) {
+            console.log(data)
+            $("#Sal_amt").html(data.list[0].sal_amt)
+            /*圆形图 左*/
+            var dataDc = data.list[0].dc
+            if(dataDc > 100){
+                dataDc = 100
+            }
+            var myChart = echarts.init(document.getElementById('main'));
+            option = {
+                series: [{
+                    name:'达成率',
+                    type: 'pie',
+                    radius: ['60%', '75%'],//这里是控制环形内半径和外半径
+                    avoidLabelOverlap: false,
+                    hoverAnimation:false,//此处查了好久属性//控制鼠标放置在环上时候的交互
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'center',
+                            textStyle: {
+                                fontSize: '20',
+                                fontWeight: 'bold',
+                                fontFamily:'Microsoft YaHei'
+                            }
+                        }
+                    },
+                    data: [{
+                        value: dataDc,
+                        name: dataDc+'%'
+                    }, {
+                        value: 100-dataDc,
+                        name: ''
+                    }]
+                }],
+                color: ['#ffa56c', '#fddfa3']
+            };
+            myChart.setOption(option);
+            /*圆形图 右*/
+            var dataTb = data.list[0].tb
+            if(dataTb < 0){
+                dataTb = 0
+            }
+            var myChart = echarts.init(document.getElementById('main1'));
+            option1 = {
+                series: [{
+                    name:'达成率',
+                    type: 'pie',
+                    radius: ['60%', '75%'],//这里是控制环形内半径和外半径
+                    avoidLabelOverlap: false,
+                    hoverAnimation:false,//此处查了好久属性//控制鼠标放置在环上时候的交互
+                    label: {
+                        normal: {
+                            show: true,
+                            position: 'center',
+                            textStyle: {
+                                fontSize: '20',
+                                fontWeight: 'bold',
+                                fontFamily:'Microsoft YaHei'
+                            }
+                        }
+                    },
+                    data: [{
+                        value: data.list[0].tb,
+                        name: data.list[0].tb+'%'
+                    }, {
+                        value: 100-dataTb,
+                        name: ''
+                    }
+                    ]
+                }],
+                color: ['#3bdc9f', '#a7efd4']
+            };
+            myChart.setOption(option1);
+        }
+    })
+    $.ajax({
+        type: 'POST',
+        url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+        dataType: 'json',
+        data:getRequestParams(params,'demo.yjkb.ds2'),
+        success: function (data) {
+            console.log(data)
+            var prd_sdate = []
+            for(var i=0;i<data.list.length;i += 2){
+                prd_sdate.push(data.list[i].prd_sdate)
+            }
+            var sal_amt1 = []
+            for(var i=0;i<data.list.length;i += 2){
+                sal_amt1.push(data.list[i].sal_amt)
+            }
+            var sal_amt2 = []
+            for(var i=1;i<data.list.length;i += 2){
+                sal_amt2.push(data.list[i].sal_amt)
+            }
+            /*圆形图 左*/
+
+            /*折线图 左*/
+            var myChart = echarts.init(document.getElementById('map'));
+            var colors = ['#26c545', '#7ad7e9'];
+            option12 = {
+                color: colors,
+                textStyle:{
+                    fontFamily:'Microsoft YaHei'
+                },
+                tooltip: {
+                    trigger: 'none',
+                    axisPointer: {
+                        type: 'cross'
+                    }
+                },
+                legend: {
+                    data:['本期', '同期']
+                },
+                grid: {
+                    top: 70,
+                    bottom: 50
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: colors[1],
+                                fontFamily:'Microsoft YaHei'
+                            }
+                        },
+                        data: prd_sdate
+                    },
+                    {
+                        type: 'category',
+                        axisTick: {
+                            alignWithLabel: true
+                        },
+                        axisLine: {
+                            onZero: false,
+                            lineStyle: {
+                                color: colors[0],
+                                fontFamily:'Microsoft YaHei'
+                            }
+                        },
+                        data: prd_sdate
+                    }
+                ],
+                yAxis: [
+                    {
+                        type: 'value'
+                    }
+                ],
+                series: [
+                    {
+                        name:'本期',
+                        type:'line',
+                        xAxisIndex: 1,
+                        smooth: true,
+                        data: sal_amt1
+                    },
+                    {
+                        name:'同期',
+                        type:'line',
+                        smooth: true,
+                        data: sal_amt2
+                    }
+                ]
+            };
+            myChart.setOption(option12);
+        }
+    })
+    $.ajax({
+        type: 'POST',
+        url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+        dataType: 'json',
+        data:getRequestParams(params,'demo.yjkb.ds3'),
+        success: function (data) {
+            console.log(data)
+            var ly_sal_amt = data.list[0].sal_amt/data.list[0].org_nm
+            var spid = data.list[0].org_nm-data.list[0].tb_org_nm
+            var target_amt = data.list[0].org_nm-data.list[0].dc_org_nm
+            $("#org_nm").html(data.list[0].org_nm)
+            $("#tb_org_nm").html(data.list[0].tb_org_nm)
+            $("#dc_org_nm").html(data.list[0].dc_org_nm)
+            $("#ly_sal_amt").html(ly_sal_amt.toFixed(2))
+            $("#spid").html(spid.toFixed(2))
+            $("#target_amt").html(target_amt.toFixed(2))
+            var myChart = echarts.init(document.getElementById('ma'));
+            option34 = {
+                title : {
+                    text: '',
+                    subtext: ''
+                },
+                tooltip : {
+                    trigger: 'item'  //悬浮提示框不显示
+                },
+                grid:{   //绘图区调整
+                    x:60,  //左留白
+                    y:0,   //上留白
+                    x2:10,  //右留白
+                    y2:0   //下留白
+                },
+                xAxis : [
+                    {
+                        show:false,
+                        type : 'value',
+                        boundaryGap : [0, 0],
+                        position: 'top'
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'category',
+                        data : [data.list[0].area_nm2,data.list[1].area_nm2],
+                        axisLine:{show:false},     //坐标轴
+                        axisTick:[{    //坐标轴小标记
+                            show:false
+                        }],
+                        axisLabel:{
+                            textStyle:{
+                                fontSize:'12',
+                                fontFamily:'Microsoft YaHei'
+                            }
+                        }
+                    }
+                ],
+                series : [
+                    {
+                        name:'',
+                        type:'bar',
+                        tooltip:{show:false},
+                        barMinHeight:20,  //最小柱高
+                        barWidth: 20,  //柱宽度
+                        barMaxWidth:200,   //最大柱宽度
+                        data:[data.list[0].sal_amt,data.list[1].sal_amt],
+                        itemStyle:{
+                            normal:{    //柱状图颜色
+                                color:'#9a99ff',
+                                label:{
+                                    show: true,   //显示文本
+                                    position: 'inside',  //数据值位置
+                                    textStyle:{
+                                        color:'#000',
+                                        fontSize:'14',
+                                        fontFamily:'Microsoft YaHei'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                ]
+            };
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true);
+                // 使用刚指定的配置项和数据显示图表。
+                // 处理点击事件并且跳转到相应的百度搜索页面
+                myChart.on('click', function (params) {
+                    console.log(params);
+                    if(params.name == '一区'){
+                        var ly_sal_amt = data.list[0].sal_amt/data.list[0].org_nm
+                        var spid = data.list[0].org_nm-data.list[0].tb_org_nm
+                        var target_amt = data.list[0].org_nm-data.list[0].dc_org_nm
+                        $("#org_nm").html(data.list[0].org_nm)
+                        $("#tb_org_nm").html(data.list[0].tb_org_nm)
+                        $("#dc_org_nm").html(data.list[0].dc_org_nm)
+                        $("#ly_sal_amt").html(ly_sal_amt.toFixed(2))
+                        $("#spid").html(spid.toFixed(2))
+                        $("#target_amt").html(target_amt.toFixed(2))
+                    }else if(params.name == '二区'){
+                        var ly_sal_amt = data.list[1].sal_amt/data.list[1].org_nm
+                        var spid = data.list[1].org_nm-data.list[1].tb_org_nm
+                        var target_amt = data.list[1].org_nm-data.list[1].dc_org_nm
+                        $("#org_nm").html(data.list[1].org_nm)
+                        $("#tb_org_nm").html(data.list[1].tb_org_nm)
+                        $("#dc_org_nm").html(data.list[1].dc_org_nm)
+                        $("#ly_sal_amt").html(ly_sal_amt.toFixed(2))
+                        $("#spid").html(spid.toFixed(2))
+                        $("#target_amt").html(target_amt.toFixed(2))
+                    }
+                });
+            }
+            myChart.setOption(option34);
+        }
+    })
+    $("#nav li").bind("click",function(){
+
+        var data_id = $(this).attr("data-id")
+        $("#nav li").removeClass('active');
+        $("#nav li[data-id = '"+data_id+"']").addClass('active');
+        var params = {
+            "userId":"13812345678",
+            "va_months":data_id
+        };
+        $.ajax({
+            type: 'POST',
+            url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+            dataType: 'json',
+            data:getRequestParams(params,'demo.yjkb.ds1'),
+            success: function (data) {
+                console.log(data)
+                $("#Sal_amt").html(data.list[0].sal_amt)
+                /*圆形图 左*/
+                var dataDc = data.list[0].dc
+                if(dataDc > 100){
+                    dataDc = 100
+                }
+                var myChart = echarts.init(document.getElementById('main'));
+                option = {
+                    series: [{
+                        name:'达成率',
+                        type: 'pie',
+                        radius: ['60%', '75%'],//这里是控制环形内半径和外半径
+                        avoidLabelOverlap: false,
+                        hoverAnimation:false,//此处查了好久属性//控制鼠标放置在环上时候的交互
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'center',
+                                textStyle: {
+                                    fontSize: '20',
+                                    fontWeight: 'bold',
+                                    fontFamily:'Microsoft YaHei'
+                                }
+                            }
+                        },
+                        data: [{
+                            value: dataDc,
+                            name: dataDc+'%'
+                        }, {
+                            value: 100-dataDc,
+                            name: ''
+                        }]
+                    }],
+                    color: ['#fea46f', '#fcdfa3']
+                };
+                myChart.setOption(option);
+                var dataTb = data.list[0].tb
+                if(dataTb < 0){
+                    dataTb = 0
+                }
+                /*圆形图 右*/
+                var myChart = echarts.init(document.getElementById('main1'));
+                option1 = {
+                    series: [{
+                        name:'达成率',
+                        type: 'pie',
+                        radius: ['60%', '75%'],//这里是控制环形内半径和外半径
+                        avoidLabelOverlap: false,
+                        hoverAnimation:false,//此处查了好久属性//控制鼠标放置在环上时候的交互
+                        label: {
+                            normal: {
+                                show: true,
+                                position: 'center',
+                                textStyle: {
+                                    fontSize: '20',
+                                    fontWeight: 'bold',
+                                    fontFamily:'Microsoft YaHei'
+                                }
+                            }
+                        },
+                        data: [{
+                            value: dataTb,
+                            name: data.list[0].tb+'%'
+                        }, {
+                            value: 100-dataTb,
+                            name: ''
+                        }
+                        ]
+                    }],
+                    color: ['#3bdc9f', '#a7efd4']
+                };
+                myChart.setOption(option1);
+            }
+        })
+        $.ajax({
+            type: 'POST',
+            url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+            dataType: 'json',
+            data:getRequestParams(params,'demo.yjkb.ds2'),
+            success: function (data) {
+                console.log(data)
+                var prd_sdate = []
+                for(var i=0;i<data.list.length;i += 2){
+                    prd_sdate.push(data.list[i].prd_sdate)
+                }
+                var sal_amt1 = []
+                for(var i=0;i<data.list.length;i += 2){
+                    sal_amt1.push(data.list[i].sal_amt)
+                }
+                var sal_amt2 = []
+                for(var i=1;i<data.list.length;i += 2){
+                    sal_amt2.push(data.list[i].sal_amt)
+                }
+                /*圆形图 左*/
+
+                /*折线图 左*/
+                var myChart = echarts.init(document.getElementById('map'));
+                var colors = ['#26c545', '#7ad7e9'];
+                option12 = {
+                    color: colors,
+                    textStyle:{
+                        fontFamily:'Microsoft YaHei'
+                    },
+                    tooltip: {
+                        trigger: 'none',
+                        axisPointer: {
+                            type: 'cross'
+                        }
+                    },
+                    legend: {
+                        data:['本期', '同期']
+                    },
+                    grid: {
+                        top: 70,
+                        bottom: 50
+                    },
+                    xAxis: [
+                        {
+                            type: 'category',
+                            axisTick: {
+                                alignWithLabel: true
+                            },
+                            axisLine: {
+                                onZero: false,
+                                lineStyle: {
+                                    color: colors[1],
+                                    fontFamily:'Microsoft YaHei'
+                                }
+                            },
+                            data: prd_sdate
+                        },
+                        {
+                            type: 'category',
+                            axisTick: {
+                                alignWithLabel: true
+                            },
+                            axisLine: {
+                                onZero: false,
+                                lineStyle: {
+                                    color: colors[0],
+                                    fontFamily:'Microsoft YaHei'
+                                }
+                            },
+                            data: prd_sdate
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value'
+                        }
+                    ],
+                    series: [
+                        {
+                            name:'本期',
+                            type:'line',
+                            xAxisIndex: 1,
+                            smooth: true,
+                            data: sal_amt1
+                        },
+                        {
+                            name:'同期',
+                            type:'line',
+                            smooth: true,
+                            data: sal_amt2
+                        }
+                    ]
+                };
+                myChart.setOption(option12);
+            }
+        })
+        $.ajax({
+            type: 'POST',
+            url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+            dataType: 'json',
+            data:getRequestParams(params,'demo.yjkb.ds3'),
+            success: function (data) {
+                console.log(data)
+                var ly_sal_amt = data.list[0].sal_amt/data.list[0].org_nm
+                var spid = data.list[0].org_nm-data.list[0].tb_org_nm
+                var target_amt = data.list[0].org_nm-data.list[0].dc_org_nm
+                $("#org_nm").html(data.list[0].org_nm)
+                $("#tb_org_nm").html(data.list[0].tb_org_nm)
+                $("#dc_org_nm").html(data.list[0].dc_org_nm)
+                $("#ly_sal_amt").html(ly_sal_amt.toFixed(2))
+                $("#spid").html(spid.toFixed(2))
+                $("#target_amt").html(target_amt.toFixed(2))
+                var myChart = echarts.init(document.getElementById('ma'));
+                option34 = {
+                    title : {
+                        text: '',
+                        subtext: ''
+                    },
+                    tooltip : {
+                        trigger: 'item'  //悬浮提示框不显示
+                    },
+                    grid:{   //绘图区调整
+                        x:60,  //左留白
+                        y:0,   //上留白
+                        x2:10,  //右留白
+                        y2:0   //下留白
+                    },
+                    xAxis : [
+                        {
+                            show:false,
+                            type : 'value',
+                            boundaryGap : [0, 0],
+                            position: 'top'
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'category',
+                            data : [data.list[0].area_nm2,data.list[1].area_nm2],
+                            axisLine:{show:false},     //坐标轴
+                            axisTick:[{    //坐标轴小标记
+                                show:false
+                            }],
+                            axisLabel:{
+                                textStyle:{
+                                    fontSize:'12',
+                                    fontFamily:'Microsoft YaHei'
+                                }
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'',
+                            type:'bar',
+                            tooltip:{show:false},
+                            barMinHeight:20,  //最小柱高
+                            barWidth: 20,  //柱宽度
+                            barMaxWidth:200,   //最大柱宽度,
+                            fontFamily:'Microsoft YaHei',
+                            data:[data.list[0].sal_amt,data.list[1].sal_amt],
+                            itemStyle:{
+                                normal:{    //柱状图颜色
+                                    color:'#9a99ff',
+                                    label:{
+                                        show: true,   //显示文本
+                                        position: 'inside',  //数据值位置
+                                        textStyle:{
+                                            color:'#000',
+                                            fontSize:'14',
+                                            fontFamily:'Microsoft YaHei'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                };
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                    // 使用刚指定的配置项和数据显示图表。
+                    // 处理点击事件并且跳转到相应的百度搜索页面
+                    myChart.on('click', function (params) {
+                        console.log(params);
+                        if(params.name == '一区'){
+                            var ly_sal_amt = data.list[0].sal_amt/data.list[0].org_nm
+                            var spid = data.list[0].org_nm-data.list[0].tb_org_nm
+                            var target_amt = data.list[0].org_nm-data.list[0].dc_org_nm
+                            $("#org_nm").html(data.list[0].org_nm)
+                            $("#tb_org_nm").html(data.list[0].tb_org_nm)
+                            $("#dc_org_nm").html(data.list[0].dc_org_nm)
+                            $("#ly_sal_amt").html(ly_sal_amt.toFixed(2))
+                            $("#spid").html(spid.toFixed(2))
+                            $("#target_amt").html(target_amt.toFixed(2))
+                        }else if(params.name == '二区'){
+                            var ly_sal_amt = data.list[1].sal_amt/data.list[1].org_nm
+                            var spid = data.list[1].org_nm-data.list[1].tb_org_nm
+                            var target_amt = data.list[1].org_nm-data.list[1].dc_org_nm
+                            $("#org_nm").html(data.list[1].org_nm)
+                            $("#tb_org_nm").html(data.list[1].tb_org_nm)
+                            $("#dc_org_nm").html(data.list[1].dc_org_nm)
+                            $("#ly_sal_amt").html(ly_sal_amt.toFixed(2))
+                            $("#spid").html(spid.toFixed(2))
+                            $("#target_amt").html(target_amt.toFixed(2))
+                        }
+                    });
+                }
+                myChart.setOption(option34);
+            }
+        })
+    })
+    /*横向条形图*/
+   //地图
+</script>
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=yes">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/css/style.css">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" type="text/css" href="css/mui.min.css"/>
+  <script type="text/javascript" src="js/mui.min.js" ></script>
+  <script src="js/Adaptation.js"></script>
+  <title>店铺排行</title>
+</head>
+<style>
+	table,table tr th, table .AA { border:1px solid #ccc; text-align: center;}
+      table { width: 90%; min-height: 25px; line-height: 25px;text-align:center; border-collapse: collapse;margin:0 auto;font-size:0.3rem;}
+      .th-one{width:100px;}
+      .th-two{width:20%}
+      .th-three{width:40%}
+      .th-four{width:30%;position: relative;}
+      .ybg{background:#CCCCCC;}
+      .spanTop{
+      	position: absolute;
+      	top:-5px;
+      	right:10px;
+      }
+      .spanBot{
+      	position: absolute;
+      	right: 10px;
+      	bottom:-5px;
+      	color:gray;
+      }
+      .bb{
+      	width:90%;height:100px;border: 1px solid red;margin: 0 auto;
+      }
+      #xxx{
+      	position: relative;
+      }
+      #tongbi{
+     		 left:70px;top:20px;
+      }
+      #zhekou{
+  	     right:70px;top:20px;
+      }
+      #huiyuan{
+      	top:60px;
+      	right:47px;
+      }
+      #huanbi{
+      	top:60px;
+      	left: 70px;
+      }
+      #mubiao{
+      	top: 100px;left: 70px;
+      }
+      .xqyan{
+      	font-size:0.3rem;color: red;position: absolute;
+      }
+      #da{
+      	width:100%;height:135px;
+      
+      }
+      #openPopover{
+      	font-size:0.8rem;float:right; margin:10px 20px 0 0; color:#ccc
+      }
+      .LinShou{
+      	float: left;font-size:0.35rem;line-height:50px;padding-left: 10px;
+      }
+      #popover{
+      	left:20% !important;     
+      	top:18% !important; 
+      }
+      .ju{
+      		text-align: center;
+      	}
+</style>
+<body class="index sale">
+<div class="top">
+  <ul class="f-cb" id="nav">
+    <li data-id="1" class="nav-d">昨日</li>
+    <li data-id="2" class="nav-d">上周</li>
+    <li data-id="3" class="nav-d">本周</li>
+    <li data-id="4" class="nav-d">上月</li>
+    <li data-id="5" class="active nav-d">本月</li>
+    <li data-id="6" class="nav-d">本年至今</li>
+  </ul>
+</div>
+<div style="width:90%;height:50px;margin: 10px auto;background:rgb(244,245,248);">
+	<label class="LinShou">零售额</label>
+	<a href="#popover" id="openPopover" class="mui-icon mui-icon-arrowdown"></a>
+</div>
+	<div style="left:20%;" id="popover" class="mui-popover">
+		  <ul class="mui-table-view">
+		    <li class="mui-table-view-cell ju"><a href="#">达成率</a></li>
+		    <li class="mui-table-view-cell ju"><a href="#">折扣</a></li>
+		    <li class="mui-table-view-cell ju"><a href="#">客单价</a></li>
+		    <li class="mui-table-view-cell ju"><a href="#">连带率</a></li>
+		    <li class="mui-table-view-cell ju"><a href="#">新品售罄率</a></li>
+		  </ul>
+		</div>
+<div style="width:90%;height:50px;margin: 10px auto;background:rgb(244,245,248);">
+<label style="float: left;font-size:0.35rem;line-height:50px;padding-left: 10px;">诊断标签</label>
+<div class="mui-switch mui-switch-mini mui-switch-blue" id="anniu" style="float:right; margin:10px 10px 10px 0;">
+  <div class="mui-switch-handle"></div>
+</div>
+</div>
+<table class="biao">
+	<tr class="ybg">
+	    <th class="th-one">排名</th>
+	    <th class="th-two">门店代号</th>
+	    <th class="th-three">门店名称</th>
+	    <th class="th-four">零售额<span class="spanTop">▲</span><span class="spanBot">▼</span></th>
+	</tr>
+	<tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td  id="aaa">646,226</td>
+ </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+    <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+    <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+    <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+   <tr class="AA">
+	    <td>1</td>
+	    <td><a class="mendianId">ZSMM01</a></td>
+	    <td>店上海茂名路专</td>
+	    <td>646,226</td>
+   </tr>
+</table>
+<script type="text/javascript" src="js/echarts.mins.js"></script>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/api.js"></script>
+<script type="text/javascript">
+		var Nd = document.getElementsByClassName('nav-d');
+		var MdId = document.getElementsByClassName('mendianId');
+		for (var i = 0; i < Nd.length; i++) {
+			Nd[i].index = i;
+			Nd[i].onclick = function(){ 
+					  $(this).addClass('active'); 
+					  $(this).siblings('li').removeClass('active');
+			}
+		}
+		for (var i = 0; i < MdId.length; i++) {
+			    var res=0
+				MdId[i].index = i;
+				MdId[i].onclick = function(){	
+					res+=1
+					if(res==1){	
+				//	$(this).parent().parent().after("<tr><td id=\"xxx\" colspan=\"4\"><span class=\"xqyan\" id=\"tongbi\">同比严重下降<span><span class=\"xqyan\" id=\"zhekou\">折扣低<span><br/><span class=\"xqyan\" id=\"huanbi\">环比下降</span><span class=\"xqyan\" id=\"huiyuan\">会员消费低</span><td/></tr>");
+						$(this).parent().parent().after("<tr class='BB'><td id=\"xxx\" colspan=\"4\"><div id=\"da\"><span class=\"xqyan\" id=\"tongbi\">同比严重下降</span><span class=\"xqyan\" id=\"zhekou\">折扣低</span><span class=\"xqyan\" id=\"huanbi\">环比下降</span><span class=\"xqyan\" id=\"huiyuan\">会员消费低</span><span class=\"xqyan\" id=\"mubiao\">目标未达成</span></div><td/></tr>");
+					  res=1
+					}
+					if(res!=1){
+					$("body .BB").remove()	
+						res=0
+					}	
+			}
+		}
+</script>
+</body>
+</html>
+<script>
+	var str=0
+ $("#anniu").click(function(){
+	 str+=1
+	 if(str==1){
+		$(".biao").hide()
+		str=1
+	 }
+	 if(str!=1){
+		$(".biao").show()
+		str=0
+	 }
+	 
+ })
+
+//	$("#tanchu").click(function(){
+//		$(this).html(
+//			str=`
+//			 <div style="width: 100%;height: 100%;position: absolute;left: 0px;top: 0px;z-index: 999;background:rgba(0,0,0,.5)">
+//			  <ul class="liebiao"style="width:60%;height:60%;background:#fff;transform:translate(30%,30%);border-radius:20px;display:flax">
+//			   <li class="liebiaoLi">达成率</li>
+//			   <li class="liebiaoLi">折扣</li>
+//			   <li class="liebiaoLi">客单价</li>
+//			   <li class="liebiaoLi">连带率</li>
+//			   <li class="liebiaoLi">新品售磬率</li>
+//			  </ul>
+//			 </div>
+//			`
+//		)
+//	})
+
+</script>

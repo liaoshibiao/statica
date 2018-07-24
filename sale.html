@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="keywords" content="">
+  <meta name="description" content="">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=yes">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/css/style.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="js/Adaptation.js"></script>
+
+  <title>销售KPI</title>
+</head>
+<body class="index sale">
+<div class="top">
+  <ul class="f-cb" id="nav">
+    <li data-id="1">昨日</li>
+    <li data-id="2">上周</li>
+    <li data-id="3">本周</li>
+    <li data-id="4">上月</li>
+    <li data-id="5" class="active">本月</li>
+    <li data-id="6">年至今</li>
+  </ul>
+</div>
+<div class="index-content f-cb">
+  <div class="all">
+    <p class="heeed f-cb">
+      <span class="text-left">整体销售分析</span>
+      <span class="text-right">20171201--20171231</span>
+    </p>
+    <ul class="f-cb" id="total_type" style="background: #e5fafa;">
+      <li data-id="1">
+        <div class='container'>
+          <p class="one" id="sal_amt">0</p>
+          <p class="two">销售额</p>
+        </div>
+      </li>
+      <li data-id="2">
+        <div class='container'>
+          <p class="one" id="sal_qty">0</p>
+          <p class="two">销售量</p>
+        </div>
+      </li>
+      <li data-id="3">
+        <div class='container'>
+          <p class="one" id="dc_v">0%</p>
+          <p class="two">达成率</p>
+        </div>
+      </li>
+      <li data-id="4">
+        <div class='container'>
+          <p class="one" id="dis_v">0%</p>
+          <p class="two">折扣</p>
+        </div>
+      </li>
+      <li data-id="5">
+        <div class='container'>
+          <p class="one" id="org_avg">0</p>
+          <p class="two">店均销额</p>
+        </div>
+      </li>
+      <li data-id="6">
+        <div class='container'>
+          <p class="one" id="org_qty">0</p>
+          <p class="two">店数</p>
+        </div>
+      </li>
+      <li data-id="7">
+        <div class='container'>
+          <p class="one" id="nos_sal_amt">0.0</p>
+          <p class="two">客单价</p>
+        </div>
+      </li>
+      <li data-id="8">
+        <div class='container'>
+          <p class="one" id="nos_sal_qty">0.0</p>
+          <p class="two">客单量</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="index-content f-cb">
+  <p class="heeed f-cb">
+    <span class="text-left">区域销售分析</span>
+    <span class='tips'>（金额：万）</span>
+  </p>
+  <div class="map-y f-cb">
+    <div id="areaMain" style="width: 100%;"></div>
+  </div>
+</div>
+<!--<div class="index-content f-cb">
+  <table class='table-compare' id="area_list">
+    <tr>
+      <th>区域</th>
+      <th>销售额</th>
+      <th>同期销额</th>
+      <th>同比增长</th>
+    </tr>
+    
+  </table>
+</div>-->
+<div class="index-content f-cb">
+  <p class="heeed f-cb">
+    <span class="text-left">区域达成分析</span>
+  </p>
+  <div class="map-y f-cb">
+    <div id="areaMain2"></div>
+  </div>
+</div>
+<div class="index-content f-cb">
+  <table class='table-compare' id="area_list">
+    <tr>
+      <th>区域</th>
+      <th>销售额</th>
+      <th>同期销额</th>
+      <th>同比增长</th>
+    </tr>
+    
+  </table>
+</div>
+<div class="footer">
+
+</div>
+<script type="text/javascript" src="js/echarts.mins.js"></script>
+<script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="js/api.js"></script>
+<script type="text/javascript">
+var data_id = 5;
+var params = {
+  "userId":"13811112222",
+  "va_months":data_id
+};
+$.ajax({
+  type: 'POST',
+  url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+  dataType: 'json',
+  data:getRequestParams(params,'demo.qyxs.ds1'),
+  success: function (data) {
+    
+	$("#sal_amt").html(data.list[0].sal_amt); //销售额
+	$("#sal_qty").html(data.list[0].sal_qty); //销售量
+	$("#dc_v").html(data.list[0].dc_v.toFixed(2)+"%"); //达成率
+	$("#dis_v").html(data.list[0].dis_v.toFixed(2) + "%"); //折扣
+	$("#org_avg").html(data.list[0].org_avg.toFixed(2)); //店均销额
+	$("#org_qty").html(data.list[0].org_qty); //店数
+	$("#nos_sal_amt").html(data.list[0].nos_sal_amt.toFixed(2)); //客单价
+	$("#nos_sal_qty").html(data.list[0].nos_sal_qty.toFixed(2)); //客单量
+  }
+})
+$.ajax({
+  type: 'POST',
+  url: 'http://tel.runsa.cn:8177/bi/router/runsasql/rest',
+  dataType: 'json',
+  data:getRequestParams(params,'demo.qyxs.ds2'),
+  success: function (data) {
+//	console.log(data)
+    
+	var list = data.list;
+	console.log(list)
+	var count = list.length;
+	/* 整体销售分析 */
+    var lineData = [];
+    var barData = [];
+	var areaName = [];
+    for (var i = 0; i < count; i++) {
+      //var b = parseInt(Math.random() * 300);
+      //var d = parseInt(Math.random() * 100);
+	  //console.log(b+","+d);
+      barData.push(list[i].sal_amt);
+      lineData.push(list[i].target_amt);
+	    areaName.push(list[i].area_nm1);
+//	    console.log(list[i].area_nm1)
+    }
+    var myChart = echarts.init(document.getElementById('areaMain'));
+    // option
+   option = {
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis:  {
+        type: 'value'
+    },
+    yAxis: {
+        type: 'category',
+        data: areaName
+    },
+    series: [
+        {
+            name: '搜索引擎',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: barData
+        }
+    ]
+};
+
+    myChart.setOption(option);
+	
+	//区域列表数据
+	var tableElement = "";
+	for(var i=0; i<count; i++){
+		tableElement += '<tr><td>'+list[i].area_nm1+'</td><td>'+list[i].sal_amt+'</td><td>'+list[i].sal_amt_ly+'</td><td>'+list[i].tb+'%</td></tr>';
+	}
+	$("#area_list").append(tableElement);
+	
+	
+    /* 区域达成分析 */
+    var myChart = echarts.init(document.getElementById('areaMain2'));
+	var dcList = [];
+	for(var i=0;i<count;i += 1){
+		dcList.push(list[i].dc.toFixed(2));
+	}
+    // option
+    option2 = {
+      color: ['#b0a2dd'],
+      tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+          type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      xAxis : [
+        {
+          type : 'category',
+          data : [],
+          axisTick: {
+            alignWithLabel: true
+          }
+        }
+      ],
+      yAxis : [
+        {
+          type : 'value',
+          axisLabel: {
+            formatter: '{value}%'
+          }
+        }
+      ],
+      series : [
+        {
+          name:'',
+          type:'bar',
+          barWidth: '60%',
+          data:dcList,
+          label: {
+            normal: {
+              show: true,
+              position: 'top',
+              textStyle: {
+                color: 'black',
+                fontSize: 14,
+              },
+              formatter: '{c}%'
+            }
+          }
+        }
+      ],
+    };
+    myChart.setOption(option2);
+  }
+})
+$("#nav li").bind("click",function() {
+
+  data_id = $(this).attr("data-id");
+  $("#nav li").removeClass('active');
+  $("#nav li[data-id = '" + data_id + "']").addClass('active');
+  
+})
+$("#total_type li").bind("click",function() {
+	//window.location.href = changeURLArg(window.location.href,'name',123)
+})
+//修改地址栏参数
+function changeURLArg(url,arg,arg_val){
+    var pattern=arg+'=([^&]*)';
+    var replaceText=arg+'='+arg_val; 
+    if(url.match(pattern)){
+        var tmp='/('+ arg+'=)([^&]*)/gi';
+        tmp=url.replace(eval(tmp),replaceText);
+        return tmp;
+    }else{ 
+        if(url.match('[\?]')){ 
+            return url+'&'+replaceText; 
+        }else{ 
+            return url+'?'+replaceText; 
+        } 
+    }
+}
+
+</script>
+</body>
+</html>
+<script>
+	var str=0
+	$("#total_type li").click(function(){
+		
+//			alert("1")
+	  $(this).css({background:"#10aef7",color:"#fff"})
+//	
+    $(this).siblings().css("background","#e5fafa")
+//				$(this).siblings()css({bcakground:"white",color:"black"})
+	})
+</script>
